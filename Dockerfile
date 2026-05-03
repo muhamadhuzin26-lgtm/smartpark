@@ -36,7 +36,8 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     opcache
 
 # ------ Apache config ------
-RUN a2enmod rewrite headers
+RUN a2dismod mpm_event mpm_worker || true \
+    && a2enmod mpm_prefork rewrite headers
 COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
 
 # ------ Install Composer ------
