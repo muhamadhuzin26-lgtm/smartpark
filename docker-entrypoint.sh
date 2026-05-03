@@ -50,5 +50,8 @@ echo "============================================"
 a2dismod mpm_event mpm_worker 2>/dev/null || true
 a2enmod mpm_prefork 2>/dev/null || true
 
+# Fix permissions for files created by root during artisan commands
+chown -R www-data:www-data /app/storage /app/bootstrap/cache 2>/dev/null || true
+
 # Start Apache in foreground - MUST always reach this line
 exec apache2-foreground
