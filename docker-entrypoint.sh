@@ -23,7 +23,7 @@ fi
 
 # --- Run migrations (with 15s timeout so it doesn't hang) ---
 echo "[3/5] Running database migrations..."
-if [ -n "$DB_HOST" ]; then
+if [ -n "$DB_HOST" ] || [ -n "$MYSQLHOST" ]; then
     timeout 15 php artisan migrate --force --no-interaction 2>&1 && echo "  -> Migrations complete" || echo "  -> WARNING: Migration failed or timed out"
 else
     echo "  -> Skipped: DB_HOST not set. Add MySQL addon in Railway."
