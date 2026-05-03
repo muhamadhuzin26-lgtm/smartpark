@@ -92,36 +92,24 @@ Route::get('/test-masuk', function () {
 */
 
 Route::get('/auth/google', function () {
+    // DUMMY LOGIN: Bypass Google OAuth untuk sementara
+    $user = User::updateOrCreate(
+        ['email' => 'dummy.admin@gmail.com'],
+        [
+            'name' => 'Dummy Admin',
+            'password' => bcrypt('google_login')
+        ]
+    );
 
-    return Socialite::driver('google')->redirect();
+    Auth::login($user, true);
+
+    return redirect()->route('dashboard');
 
 })->name('google.login');
 
-
 Route::get('/auth/google/callback', function () {
-
-    try {
-
-        $googleUser = Socialite::driver('google')->user();
-
-        $user = User::updateOrCreate(
-            ['email' => $googleUser->email],
-            [
-                'name' => $googleUser->name,
-                'password' => bcrypt('google_login')
-            ]
-        );
-
-        Auth::login($user, true);
-
-        return redirect()->route('dashboard');
-
-    } catch (\Exception $e) {
-
-        return redirect('/login')->with('error','Login Google gagal');
-
-    }
-
+    // Rute callback dibiarkan kosong atau redirect ke dashboard
+    return redirect()->route('dashboard');
 });
 
 /*
