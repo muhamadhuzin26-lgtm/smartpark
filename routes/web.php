@@ -92,19 +92,22 @@ Route::get('/test-masuk', function () {
 */
 
 Route::get('/auth/google', function () {
-    // DUMMY LOGIN: Bypass Google OAuth untuk sementara
-    $user = User::updateOrCreate(
-        ['email' => 'dummy.admin@gmail.com'],
-        [
-            'name' => 'Dummy Admin',
-            'password' => bcrypt('google_login')
-        ]
-    );
+    try {
+        // DUMMY LOGIN: Bypass Google OAuth untuk sementara
+        $user = User::updateOrCreate(
+            ['email' => 'dummy.admin@gmail.com'],
+            [
+                'name' => 'Dummy Admin',
+                'password' => bcrypt('google_login')
+            ]
+        );
 
-    Auth::login($user, true);
+        Auth::login($user, true);
 
-    return redirect()->route('dashboard');
-
+        return redirect()->route('dashboard');
+    } catch (\Exception $e) {
+        return response("Database Error: " . $e->getMessage() . "<br><br><b>Perbaikan:</b> Pastikan kamu sudah klik 'Reference Variable' untuk koneksi MySQL di tab Variables Railway (MYSQLHOST, MYSQLUSER, dll).", 500);
+    }
 })->name('google.login');
 
 Route::get('/auth/google/callback', function () {
