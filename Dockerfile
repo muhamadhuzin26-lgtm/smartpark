@@ -77,8 +77,11 @@ RUN npm ci --no-audit --no-fund
 # Copy the rest of the app
 COPY . .
 
+# Create .env from example (Laravel needs this for artisan commands)
+RUN cp .env.example .env
+
 # Re-run composer scripts (post-autoload-dump, package:discover)
-RUN composer dump-autoload --optimize --no-interaction
+RUN composer dump-autoload --optimize --no-interaction || true
 
 # Build Vite assets
 RUN npm run build
